@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/core/base_use_case.dart';
 import 'package:movies_app/core/enum.dart';
-import 'package:movies_app/features/movies_module/domain/use_case/get_genres_use_case.dart';
 import 'package:movies_app/features/movies_module/domain/use_case/get_popular_movies_usecase.dart';
 import 'package:movies_app/features/movies_module/domain/use_case/get_top_rated_movies_usecase.dart';
 import 'package:movies_app/features/movies_module/presentation/controller/movies_main/movies_event.dart';
@@ -14,11 +13,10 @@ class MoviesBloc extends Bloc<MoviesEvents, MoviesStates> {
   final GetTrendingMoviesUseCase getTrendingMoviesUseCase;
   final GetPopularMoviesUseCase getPopularMoviesUseCase;
   final GetTopRatedMoviesUseCase getTopRatedMoviesUseCase;
-  final GetGenresUseCase getGenresUseCase;
 
 
   MoviesBloc(this.getTrendingMoviesUseCase, this.getPopularMoviesUseCase,
-      this.getTopRatedMoviesUseCase,this.getGenresUseCase)
+      this.getTopRatedMoviesUseCase,)
       : super(const MoviesStates()) {
     on<GetTrendingMoviesEvent>(_getTrendingMovies);
 

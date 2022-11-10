@@ -11,7 +11,9 @@ import '../../../../core/app_constants.dart';
 import '../../../../core/enum.dart';
 
 class TrendingMoviesWidget extends StatelessWidget {
-  const TrendingMoviesWidget({Key? key}) : super(key: key);
+  final VoidCallback showNavigation;
+  final VoidCallback hideNavigation;
+  const TrendingMoviesWidget({Key? key,required this.hideNavigation,required this.showNavigation}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class TrendingMoviesWidget extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      MovieDetailScreen(id: item.id)));
+                                      MovieDetailScreen(id: item.id, showNavigation: showNavigation,hideNavigation: hideNavigation,)));
                         },
                         child: Stack(
                           children: [

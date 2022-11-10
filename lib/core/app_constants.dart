@@ -8,7 +8,13 @@ class AppConstants{
   static String movieRecommendationPath(int movieId) => '$baseUrl/movie/$movieId/recommendations?api_key=$apiKey';
   static String allPopularMoviesPath(int currentPage) => '$baseUrl/movie/popular?api_key=$apiKey&page=$currentPage';
   static String allTopRatedMoviesPath(int currentPage) => '$baseUrl/movie/top_rated?api_key=$apiKey&page=$currentPage';
-  static const String genresPath = '$baseUrl/genre/movie/list?api_key=$apiKey';
+  static String searchMoviesPath(int currentPage,String name) => '$baseUrl/search/movie?api_key=$apiKey&language=en-US&query=$name&page=$currentPage&include_adult=false';
+
+
+
+  //static const String genresPath = '$baseUrl/genre/movie/list?api_key=$apiKey';
+  static String selectedGenres(int genreId, int currentPage) => '$baseUrl/discover/movie?api_key=$apiKey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=$currentPage&with_genres=$genreId&with_watch_monetization_types=flatrate';
+
 
 
 

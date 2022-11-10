@@ -4,7 +4,7 @@ import 'package:movies_app/features/movies_module/data/repository/movies_reposit
 import 'package:movies_app/features/movies_module/domain/repository/base_movies_repository.dart';
 import 'package:movies_app/features/movies_module/domain/use_case/get_all_popular_movies_use_case.dart';
 import 'package:movies_app/features/movies_module/domain/use_case/get_all_top_rated_movies_use_case.dart';
-import 'package:movies_app/features/movies_module/domain/use_case/get_genres_use_case.dart';
+import 'package:movies_app/features/movies_module/domain/use_case/get_genre_movies_use_case.dart';
 import 'package:movies_app/features/movies_module/domain/use_case/get_movies_details_use_case.dart';
 import 'package:movies_app/features/movies_module/domain/use_case/get_popular_movies_usecase.dart';
 import 'package:movies_app/features/movies_module/domain/use_case/get_recommendation_use_case.dart';
@@ -12,16 +12,24 @@ import 'package:movies_app/features/movies_module/domain/use_case/get_top_rated_
 import 'package:movies_app/features/movies_module/presentation/controller/movie_details/movie_details_bloc.dart';
 import 'package:movies_app/features/movies_module/presentation/controller/movies_main/movies_bloc.dart';
 import 'package:movies_app/features/movies_module/presentation/controller/popular_movies/see_all_movies_bloc.dart';
+import 'package:movies_app/features/movies_module/presentation/controller/search/search_movies_bloc.dart';
 import '../../features/movies_module/domain/use_case/get_trending_movies_usecase.dart';
+import '../../features/movies_module/domain/use_case/search_movies_use_case.dart';
+import '../../features/movies_module/presentation/controller/categories/category_movies_bloc.dart';
 
 final sl = GetIt.instance;
 
 class ServiceLocator {
   void init() {
     ///Movies BLoC
-    sl.registerFactory(() => MoviesBloc(sl(), sl(), sl(), sl()));
+    sl.registerFactory(() => MoviesBloc(sl(), sl(), sl()));
     sl.registerFactory(() => MovieDetailsBloc(sl(),sl()));
     sl.registerFactory(() => SeeAllMoviesBloc(sl(),sl()));
+    sl.registerFactory(() => CategoryMoviesBloc(sl()));
+    sl.registerFactory(() => SearchMovieBloc(sl()));
+
+
+
 
     ///UseCase
     sl.registerLazySingleton(() => GetTrendingMoviesUseCase(sl()));
@@ -31,7 +39,9 @@ class ServiceLocator {
     sl.registerLazySingleton(() => GetRecommendationUseCase(sl()));
     sl.registerLazySingleton(() => GetAllPopularMoviesUseCase(sl()));
     sl.registerLazySingleton(() => GetAllTopRatedMoviesUseCase(sl()));
-    sl.registerLazySingleton(() => GetGenresUseCase(sl()));
+    sl.registerLazySingleton(() => GetGenreMoviesUseCase(sl()));
+    sl.registerLazySingleton(() => SearchMoviesUseCase(sl()));
+
 
 
 

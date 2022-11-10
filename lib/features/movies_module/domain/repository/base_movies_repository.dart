@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:movies_app/features/movies_module/domain/entities/genres.dart';
 import 'package:movies_app/features/movies_module/domain/entities/movie.dart';
 import 'package:movies_app/features/movies_module/domain/entities/movie_details.dart';
 import 'package:movies_app/features/movies_module/domain/use_case/get_all_popular_movies_use_case.dart';
@@ -7,6 +6,8 @@ import 'package:movies_app/features/movies_module/domain/use_case/get_movies_det
 import 'package:movies_app/features/movies_module/domain/use_case/get_recommendation_use_case.dart';
 import '../../../../core/error/failure.dart';
 import '../entities/recommendation.dart';
+import '../use_case/get_genre_movies_use_case.dart';
+import '../use_case/search_movies_use_case.dart';
 
 abstract class BaseMoviesRepository {
   Future<Either<Failure,List<Movies>>> getTrendingMovies();
@@ -16,7 +17,10 @@ abstract class BaseMoviesRepository {
   Future<Either<Failure,List<Recommendation>>> getRecommendation(RecommendationParameters parameters);
   Future<Either<Failure,List<Movies>>> getAllPopularMovies(CurrentIndexParameters parameters);
   Future<Either<Failure,List<Movies>>> getAllTopRatedMovies(CurrentIndexParameters parameters);
-  Future<Either<Failure,List<Genres>>> getGenres();
+  Future<Either<Failure,List<Movies>>> getGenreMovies(GenresMoviesParameters parameters);
+  Future<Either<Failure,List<Movies>>> searchMovies(SearchParameters parameters);
+
+
 
 
 

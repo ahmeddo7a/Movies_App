@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/core/components.dart';
 import 'package:movies_app/features/movies_module/presentation/controller/popular_movies/see_all_movies_bloc.dart';
@@ -9,13 +10,51 @@ import '../../../../core/app_constants.dart';
 import '../../../../core/enum.dart';
 import '../../../../core/services/service_locator.dart';
 import 'movie_detail_screen.dart';
-import 'movies_screen.dart';
 
-class TopRatedScreen extends StatelessWidget {
-  final RefreshController scrollController =
-      RefreshController(initialRefresh: false);
+class TopRatedScreen extends StatefulWidget {
+  final VoidCallback showNavigation;
+  final VoidCallback hideNavigation;
 
-  TopRatedScreen({Key? key}) : super(key: key);
+  const TopRatedScreen(
+      {Key? key, required this.showNavigation, required this.hideNavigation})
+      : super(key: key);
+
+  @override
+  State<TopRatedScreen> createState() => _TopRatedScreenState();
+}
+
+class _TopRatedScreenState extends State<TopRatedScreen> {
+  RefreshController scrollController = RefreshController(initialRefresh: false);
+
+  ScrollController navScrollController = ScrollController();
+
+  @override
+  void initState() {
+    navScrollController.addListener(() {
+      if (navScrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        widget.showNavigation();
+      } else {
+        widget.hideNavigation();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    navScrollController.removeListener(() {
+      if (navScrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        widget.showNavigation();
+      } else {
+        widget.hideNavigation();
+      }
+    });
+    navScrollController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +82,8 @@ class TopRatedScreen extends StatelessWidget {
               ),
               leading: IconButton(
                   onPressed: () {
-                    navigateAndFinish(context, const MoviesScreen());
+                    Navigator.pop(context);
+                    ///TODo add back Function
                   },
                   icon: const Icon(
                     Icons.arrow_back,
@@ -72,6 +112,7 @@ class TopRatedScreen extends StatelessWidget {
                   scrollController.loadComplete();
                 },
                 child: ListView.separated(
+                  controller: navScrollController,
                   itemBuilder: (context, index) {
                     final movie = state.allTopRatedMovies[index];
                     return SizedBox(
@@ -167,7 +208,7 @@ class TopRatedScreen extends StatelessWidget {
                                     child: ElevatedButton(
                                       onPressed: () {
                                         navigateAndFinish(context,
-                                            MovieDetailScreen(id: movie.id));
+                                            MovieDetailScreen(id: movie.id,showNavigation: widget.showNavigation,hideNavigation: widget.hideNavigation,));
                                       },
                                       style: ButtonStyle(
                                         padding: MaterialStateProperty.all(

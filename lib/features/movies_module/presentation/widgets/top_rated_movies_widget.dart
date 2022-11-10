@@ -10,7 +10,9 @@ import '../../../../core/app_constants.dart';
 import '../screens/movie_detail_screen.dart';
 
 class TopRatedMoviesWidget extends StatelessWidget {
-  const TopRatedMoviesWidget({Key? key}) : super(key: key);
+  final VoidCallback showNavigation;
+  final VoidCallback hideNavigation;
+  const TopRatedMoviesWidget({Key? key,required this.showNavigation,required this.hideNavigation}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class TopRatedMoviesWidget extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    MovieDetailScreen(id: movie.id)));
+                                    MovieDetailScreen(id: movie.id,showNavigation: showNavigation,hideNavigation: hideNavigation,)));
                       },
                       child: ClipRRect(
                         borderRadius:

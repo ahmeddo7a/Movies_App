@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/core/app_constants.dart';
@@ -13,8 +14,10 @@ import '../controller/movie_details/movie_details_bloc.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final int? id;
+  final VoidCallback showNavigation;
+  final VoidCallback hideNavigation;
 
-  const MovieDetailScreen({Key? key,this.id}) : super(key: key);
+  const MovieDetailScreen({Key? key,this.id, required this.showNavigation, required this.hideNavigation}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +25,55 @@ class MovieDetailScreen extends StatelessWidget {
       create: (context) => sl<MovieDetailsBloc>()
         ..add(GetMovieDetailsEvent(id: id!))
         ..add(GetRecommendationEvent(id: id!)),
-      child: const Scaffold(
-        body: MovieDetailContent(),
+      child: Scaffold(
+        body: MovieDetailContent(hideNavigation: hideNavigation,showNavigation: showNavigation,),
       ),
     );
   }
 }
 
-class MovieDetailContent extends StatelessWidget {
+class MovieDetailContent extends StatefulWidget {
+  final VoidCallback showNavigation;
+  final VoidCallback hideNavigation;
   const MovieDetailContent({
+    required this.showNavigation,
+    required this.hideNavigation,
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<MovieDetailContent> createState() => _MovieDetailContentState();
+}
+
+class _MovieDetailContentState extends State<MovieDetailContent> {
+  ScrollController navScrollController = ScrollController();
+
+  @override
+  void initState() {
+    navScrollController.addListener(() {
+      if (navScrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        widget.showNavigation();
+      } else {
+        widget.hideNavigation();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    navScrollController.removeListener(() {
+      if (navScrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        widget.showNavigation();
+      } else {
+        widget.hideNavigation();
+      }
+    });
+    navScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +86,13 @@ class MovieDetailContent extends StatelessWidget {
             );
           case RequestState.loaded:
             return CustomScrollView(
+              controller: navScrollController,
               key: const Key('movieDetailScrollView'),
               slivers: [
                 SliverAppBar(
                   pinned: true,
                   expandedHeight: 250.0,
+                  title: Text(state.movieDetails!.title),
                   flexibleSpace: FlexibleSpaceBar(
                     background: FadeIn(
                       duration: const Duration(milliseconds: 500),
@@ -210,6 +253,7 @@ class MovieDetailContent extends StatelessWidget {
       },
     );
   }
+
   String _showGenres(List<Genres> genres) {
     String result = '';
     for (var genre in genres) {
@@ -220,6 +264,7 @@ class MovieDetailContent extends StatelessWidget {
     }
     return result.substring(0, result.length - 2);
   }
+
   String _showDuration(int runtime) {
     final int hours = runtime ~/ 60;
     final int minutes = runtime % 60;
@@ -229,6 +274,7 @@ class MovieDetailContent extends StatelessWidget {
       return '${minutes}m';
     }
   }
+
   Widget _showRecommendations() {
     return BlocBuilder<MovieDetailsBloc, MovieDetailsState>(
       builder: (context, state) => SliverGrid(
@@ -240,7 +286,7 @@ class MovieDetailContent extends StatelessWidget {
               duration: const Duration(milliseconds: 500),
               child: InkWell(
                 onTap: (){
-                  navigateAndFinish(context, MovieDetailScreen(id: recommendation.id,));
+                  navigateTo(context, MovieDetailScreen(id: recommendation.id,hideNavigation: widget.hideNavigation,showNavigation: widget.showNavigation,));
                 },
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(4.0)),

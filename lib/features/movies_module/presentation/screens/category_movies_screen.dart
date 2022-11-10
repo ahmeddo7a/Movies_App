@@ -2,40 +2,51 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/core/components.dart';
-import 'package:movies_app/core/enum.dart';
-import 'package:movies_app/features/movies_module/presentation/controller/popular_movies/see_all_movies_bloc.dart';
+import 'package:movies_app/features/movies_module/presentation/controller/categories/category_movies_bloc.dart';
+import 'package:movies_app/features/movies_module/presentation/controller/categories/category_movies_state.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../../core/app_constants.dart';
+import '../../../../core/components.dart';
+import '../../../../core/enum.dart';
 import '../../../../core/services/service_locator.dart';
+import '../controller/categories/category_movies_event.dart';
 import 'movie_detail_screen.dart';
 
-class PopularScreen extends StatefulWidget {
+class CategoryMoviesScreen extends StatefulWidget {
+  final String title;
+  final int? id;
   final VoidCallback showNavigation;
   final VoidCallback hideNavigation;
 
-  const PopularScreen({Key? key,required this.hideNavigation,required this.showNavigation}) : super(key: key);
+  const CategoryMoviesScreen(
+      {Key? key,
+      required this.hideNavigation,
+      required this.showNavigation,
+        required this.title,
+      this.id})
+      : super(key: key);
 
   @override
-  State<PopularScreen> createState() => _PopularScreenState();
+  State<CategoryMoviesScreen> createState() => _CategoryMoviesScreenState();
 }
 
-class _PopularScreenState extends State<PopularScreen> {
-   RefreshController scrollController =
-      RefreshController(initialRefresh: false);
-   ScrollController navScrollController = ScrollController();
+class _CategoryMoviesScreenState extends State<CategoryMoviesScreen> {
 
-   @override
+  RefreshController scrollController =
+  RefreshController(initialRefresh: false);
+  ScrollController navScrollController = ScrollController();
+
+  @override
   void initState() {
-     navScrollController.addListener(() {
-       if (navScrollController.position.userScrollDirection ==
-           ScrollDirection.forward) {
-         widget.showNavigation();
-       } else {
-         widget.hideNavigation();
-       }
-     });
-     super.initState();
+    navScrollController.addListener(() {
+      if (navScrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        widget.showNavigation();
+      } else {
+        widget.hideNavigation();
+      }
+    });
+    super.initState();
   }
 
   @override
@@ -43,34 +54,35 @@ class _PopularScreenState extends State<PopularScreen> {
     scrollController.dispose();
     navScrollController.removeListener(() {
       if (navScrollController.position.userScrollDirection ==
-        ScrollDirection.forward) {
-      widget.showNavigation();
-    } else {
-      widget.hideNavigation();
-    } });
+          ScrollDirection.forward) {
+        widget.showNavigation();
+      } else {
+        widget.hideNavigation();
+      } });
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
     final myWidth = MediaQuery.of(context).size.width;
     final myHeight = MediaQuery.of(context).size.height;
     return BlocProvider(
-      create: (context) =>
-          sl<SeeAllMoviesBloc>()..add(GetAllPopularMoviesEvent()),
-      child: BlocBuilder<SeeAllMoviesBloc, SeeAllMoviesState>(
+      create: (context) => sl<CategoryMoviesBloc>()
+        ..add(
+          GetAllCategoryMoviesEvent(id: widget.id!),
+        ),
+      child: BlocBuilder<CategoryMoviesBloc,CategoryMoviesState>(
           buildWhen: (previous, current) =>
-              current.allPopularMoviesState != RequestState.loading,
-          builder: (context, state) {
+          current.categoryMoviesState != RequestState.loading,
+          builder: (context,state){
             return Scaffold(
               appBar: AppBar(
                 toolbarHeight: myHeight * 0.07,
                 backgroundColor: Colors.grey.shade900,
                 elevation: 0,
-                title: const Text(
-                  'Popular Movies',
-                  style: TextStyle(
+                title: Text(
+                  widget.title,
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 22,
                       fontWeight: FontWeight.bold),
@@ -101,21 +113,21 @@ class _PopularScreenState extends State<PopularScreen> {
                   enablePullDown: false,
                   controller: scrollController,
                   onLoading: () async {
-                    BlocProvider.of<SeeAllMoviesBloc>(context)
-                        .add(GetAllPopularMoviesEvent());
+                    BlocProvider.of<CategoryMoviesBloc>(context)
+                        .add(GetAllCategoryMoviesEvent(id:widget.id!));
                     scrollController.loadComplete();
                   },
                   child: ListView.separated(
                     controller: navScrollController,
                     itemBuilder: (context, index) {
-                      final movie = state.allPopularMovies[index];
+                      final movie = state.categoryMovies[index];
                       return SizedBox(
                         height: myHeight * 0.23,
                         child: Row(
                           children: [
                             ClipRRect(
                               borderRadius:
-                                  const BorderRadius.all(Radius.circular(8.0)),
+                              const BorderRadius.all(Radius.circular(8.0)),
                               child: CachedNetworkImage(
                                 width: myWidth * 0.35,
                                 height: myHeight * 0.23,
@@ -130,7 +142,7 @@ class _PopularScreenState extends State<PopularScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Text(
                                     movie.name,
@@ -212,14 +224,14 @@ class _PopularScreenState extends State<PopularScreen> {
                                           shape: MaterialStateProperty.all(
                                             RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(10),
+                                              BorderRadius.circular(10),
                                               side: const BorderSide(
                                                   color: Colors.teal),
                                             ),
                                           ),
                                           backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.teal),
+                                          MaterialStateProperty.all(
+                                              Colors.teal),
                                         ),
                                         child: const Text(
                                           "More ..",
@@ -238,9 +250,9 @@ class _PopularScreenState extends State<PopularScreen> {
                         ),
                       );
                     },
-                    itemCount: state.allPopularMovies.length,
+                    itemCount: state.categoryMovies.length,
                     separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(),
+                    const Divider(),
                   ),
                 ),
               ),
