@@ -4,7 +4,7 @@ Movies Application project, which preview the popular,latest,trending Movies.
 also you can search for a specific movie and find its rate and description based on themoviesdp
 
 ## Getting Started
-<img src="https://i.ibb.co/q0f820F/Categories-movies-mockup.png" alt="Categories-movies-mockup" border="0">
+<img src="https://i.ibb.co/q0f820F/Categories-movies-mockup.png" height="100" alt="Categories-movies-mockup" border="0">
 <img src="https://i.ibb.co/m6xxZmP/Details-movies-mockup.png" alt="Details-movies-mockup" border="0">
 <img src="https://i.ibb.co/ZSVvy7p/Details2-movies-mockup.png" alt="Details2-movies-mockup" border="0">
 <img src="https://i.ibb.co/93VcbZB/main-movies-mockup.png" alt="main-movies-mockup" border="0">
