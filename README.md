@@ -1,17 +1,13 @@
 # movies_app
 
-A new Flutter project.
+Movies Application project, which preview the popular,latest,trending Movies.
+also you can search for a specific movie and find its rate and description based on themoviesdp
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# Movies_App
+<img src="https://i.ibb.co/q0f820F/Categories-movies-mockup.png" alt="Categories-movies-mockup" border="0">
+<img src="https://i.ibb.co/m6xxZmP/Details-movies-mockup.png" alt="Details-movies-mockup" border="0">
+<img src="https://i.ibb.co/ZSVvy7p/Details2-movies-mockup.png" alt="Details2-movies-mockup" border="0">
+<img src="https://i.ibb.co/93VcbZB/main-movies-mockup.png" alt="main-movies-mockup" border="0">
+<img src="https://i.ibb.co/w6fwZWG/Popular-movies-mockup.png" alt="Popular-movies-mockup" border="0">
+<img src="https://i.ibb.co/42D5T2x/Popular-movies2-mockup.png" alt="Popular-movies2-mockup" border="0">
+<img src="https://i.ibb.co/ky1f4C2/Search-movies-mockup.png" alt="Search-movies-mockup" border="0">
